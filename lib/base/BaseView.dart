@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taiwan_bus/config/MyConfig.dart';
+import 'package:taiwan_bus/generated/l10n.dart';
 import 'package:taiwan_bus/ui/dialog/MessageDialog.dart';
 import 'IPresenter.dart';
 import 'IView.dart';
@@ -10,15 +11,22 @@ abstract class BaseView extends StatefulWidget {}
 
 abstract class BaseViewState<P extends IPresenter, V extends BaseView>
     extends State<V> implements IView {
-  P presenter;
   int _loadingCount = 0;
+
+  P _presenter;
+  P get presenter => _presenter;
+
+  P createPresenter();
+
+  @override
+  S get s => S.of(context);
 
   @override
   void initState() {
     super.initState();
-    presenter = createPresenter();
-    if (presenter != null) {
-      presenter.attachView(this);
+    _presenter = createPresenter();
+    if (_presenter != null) {
+      _presenter.attachView(this);
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       afterInit();
@@ -27,20 +35,14 @@ abstract class BaseViewState<P extends IPresenter, V extends BaseView>
 
   void afterInit() {}
 
-  P createPresenter();
-
-  P getPresenter() {
-    return presenter;
-  }
-
   @override
   void dispose() {
     super.dispose();
     _loadingCount = 0;
     hideLoading();
-    if (presenter != null) {
-      presenter.detachView();
-      presenter = null;
+    if (_presenter != null) {
+      _presenter.detachView();
+      _presenter = null;
     }
   }
 
@@ -90,11 +92,11 @@ abstract class BaseViewState<P extends IPresenter, V extends BaseView>
 
   @override
   Future<dynamic> showMsg(String msg, {int code = 1}) {
-    String title = code < 0 ? "警告" : "提示";
+    String title = code > 0 ? s.notice : s.alert;
     if(!MyConfig.isDebug){
       switch(code){
         case -3:
-          msg = "服务器存取发生问题";
+          msg = s.server_error;
           break;
       }
     }
@@ -108,7 +110,7 @@ abstract class BaseViewState<P extends IPresenter, V extends BaseView>
                 title: title,
                 msg: msg,
                 buttons: [
-                  MyDialogButton(text: "确认", onTap: (){
+                  MyDialogButton(text: s.ok, onTap: (){
                     Navigator.of(context).pop();
                   })
                 ],

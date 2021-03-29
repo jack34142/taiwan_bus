@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:taiwan_bus/utils/Log.dart';
@@ -20,13 +22,13 @@ class HttpUtil {
       {Map<String, dynamic> params,
       Map<String, dynamic> headers,
       ContentType contentType: ContentType.URLENCODE,
-      @required onResponse(String response),
+      @required onResponse(Response response),
       onError(e),
       onComplete(Dio dio)}) {
     String url = getBaseUrl() + path;
 
     Dio dio = new Dio();
-    dio.options.connectTimeout = 30000;
+    dio.options.connectTimeout = 10000;
 //    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
 //      client.badCertificateCallback =
 //          (X509Certificate cert, String host, int port) => host == Uri.parse(url).host;
@@ -49,7 +51,14 @@ class HttpUtil {
       stringBuffer.write("----- onResponse -----\n");
       stringBuffer
           .write("statusCode = " + response.statusCode.toString() + "\n");
-      String body = response.data.toString();
+
+      String body;
+      if(response.data is List || response.data is Map){
+        JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+        body = encoder.convert(response.data);
+      }else{
+        body = response.data.toString();
+      }
       stringBuffer.write(body);
       Log.d(stringBuffer.toString());
       return response; // continue
@@ -89,7 +98,7 @@ class HttpUtil {
         throw("no match http method");
     }
     mResponse
-      .then((response) => onResponse(response.data.toString()))
+      .then(onResponse)
       .catchError((e, stackTrace){
         print(e);
         print(stackTrace);

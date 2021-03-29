@@ -9,8 +9,10 @@ abstract class BasePresenter<V extends IView, M extends IModel>
     implements IPresenter {
   M _model;
   V _view;
-  M get mvpModel => _model;
-  V get mvpView => _view;
+  V get view => _view;
+  M get model => _model;
+
+  IModel createModel();
 
   @override
   void attachView(IView view) {
@@ -18,16 +20,18 @@ abstract class BasePresenter<V extends IView, M extends IModel>
     this._model = createModel();
     _model.http = HttpBase((isLoading){
       if(isLoading)
-        mvpView?.showLoading();
+        _view?.showLoading();
       else
-        mvpView?.hideLoading();
+        _view?.hideLoading();
     }, (e){
       String msg = e.toString();
       if(e is DioError){
-        String msg = e.message;
+        msg = e.message;
         if (e.response != null){
           Map json;
-          if(e.response.data is Map){
+          if(e.type == DioErrorType.CONNECT_TIMEOUT) {
+            return;
+          }if(e.response.data is Map){
             json = e.response.data;
           }else{
             try{
@@ -36,6 +40,7 @@ abstract class BasePresenter<V extends IView, M extends IModel>
               json = {"msg": "error response not json"};
             }
           }
+          print(json);
           if(json.containsKey("message")){
             msg = json["message"];
           }else if (json.containsKey("msg")){
@@ -53,7 +58,7 @@ abstract class BasePresenter<V extends IView, M extends IModel>
           // }
         }
       }
-      mvpView.showMsg(msg, code: -3);
+      _view.showMsg(msg, code: -3);
     });
   }
 
@@ -67,12 +72,4 @@ abstract class BasePresenter<V extends IView, M extends IModel>
       _model = null;
     }
   }
-
-  V get view {
-    return _view;
-  }
-
-  M get model => _model;
-
-  IModel createModel();
 }

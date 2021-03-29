@@ -1,0 +1,21 @@
+{
+  "notice": "提示",
+  "alert": "警告",
+  "ok": "確認",
+  "server_error": "伺服器連接失敗",
+  "open_gps_permission": "請允許應用程式使用定位權限",
+  "open_gps": "請開啟位置服務",
+  "positioning": "定位中...",
+  "minute_second": "{m}分{s}秒",
+  "no_departure": "尚未發車",
+  "coming_soon": "即將到站",
+  "route_change": "路線變更",
+  "your_position": "你的位置",
+  "get_on": "可上車",
+  "get_off": "可下車",
+  "get_on_and_off": "可上下車",
+  "outbound": "去程",
+  "return_trip": "返程",
+  "loop": "迴圈",
+  "next_end": "下一站終點站"
+}
