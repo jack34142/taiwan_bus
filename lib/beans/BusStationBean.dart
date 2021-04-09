@@ -1,7 +1,7 @@
-/// StationPosition : {"PositionLat":25.030203,"PositionLon":121.300541,"GeoHash":"wsqq2k87e"}
-/// Stops : [{"StopUID":"THB303171","StopID":"303171","StopName":{"Zh_tw":"經國轉運站","En":"Jingguo Bus Station"},"RouteUID":"THB1662","RouteID":"1662","RouteName":{"Zh_tw":"1662","En":"1662"}},{"StopUID":"THB303171","StopID":"303171","StopName":{"Zh_tw":"經國轉運站","En":"Jingguo Bus Station"},"RouteUID":"THB1816","RouteID":"1816","RouteName":{"Zh_tw":"1816","En":"1816"}}]
-/// UpdateTime : "2021-03-05T04:12:54+08:00"
-/// VersionID : 814
+/// StationPosition : {"PositionLat":25.03021,"PositionLon":121.30054,"GeoHash":"wsqq2k87e"}
+/// Stops : [{"StopUID":"THB220961","StopID":"220961","StopName":{"Zh_tw":"經國轉運站","En":"JingGuo Bus Station"},"RouteUID":"THB9005","RouteID":"9005","RouteName":{"Zh_tw":"9005","En":"9005"}},{"StopUID":"THB247063","StopID":"247063","StopName":{"Zh_tw":"經國轉運站","En":"JingGou Bus Station"},"RouteUID":"THB9023","RouteID":"9023","RouteName":{"Zh_tw":"9023","En":"9023"}}]
+/// UpdateTime : "2021-03-30T04:08:05+08:00"
+/// VersionID : 839
 
 class BusStationBean {
   StationPosition _stationPosition;
@@ -15,15 +15,15 @@ class BusStationBean {
   int get versionID => _versionID;
 
   BusStationBean({
-      StationPosition stationPosition, 
-      List<Stops> stops, 
-      String updateTime, 
-      int versionID}){
+    StationPosition stationPosition,
+    List<Stops> stops,
+    String updateTime,
+    int versionID}){
     _stationPosition = stationPosition;
     _stops = stops;
     _updateTime = updateTime;
     _versionID = versionID;
-}
+  }
 
   BusStationBean.fromJson(dynamic json) {
     _stationPosition = json["StationPosition"] != null ? StationPosition.fromJson(json["StationPosition"]) : null;
@@ -52,12 +52,12 @@ class BusStationBean {
 
 }
 
-/// StopUID : "THB303171"
-/// StopID : "303171"
-/// StopName : {"Zh_tw":"經國轉運站","En":"Jingguo Bus Station"}
-/// RouteUID : "THB1662"
-/// RouteID : "1662"
-/// RouteName : {"Zh_tw":"1662","En":"1662"}
+/// StopUID : "THB220961"
+/// StopID : "220961"
+/// StopName : {"Zh_tw":"經國轉運站","En":"JingGuo Bus Station"}
+/// RouteUID : "THB9005"
+/// RouteID : "9005"
+/// RouteName : {"Zh_tw":"9005","En":"9005"}
 
 class Stops {
   String _stopUID;
@@ -75,19 +75,19 @@ class Stops {
   RouteName get routeName => _routeName;
 
   Stops({
-      String stopUID, 
-      String stopID, 
-      StopName stopName, 
-      String routeUID, 
-      String routeID, 
-      RouteName routeName}){
+    String stopUID,
+    String stopID,
+    StopName stopName,
+    String routeUID,
+    String routeID,
+    RouteName routeName}){
     _stopUID = stopUID;
     _stopID = stopID;
     _stopName = stopName;
     _routeUID = routeUID;
     _routeID = routeID;
     _routeName = routeName;
-}
+  }
 
   Stops.fromJson(dynamic json) {
     _stopUID = json["StopUID"];
@@ -115,8 +115,8 @@ class Stops {
 
 }
 
-/// Zh_tw : "1662"
-/// En : "1662"
+/// Zh_tw : "9005"
+/// En : "9005"
 
 class RouteName {
   String _zhTw;
@@ -126,11 +126,11 @@ class RouteName {
   String get en => _en;
 
   RouteName({
-      String zhTw, 
-      String en}){
+    String zhTw,
+    String en}){
     _zhTw = zhTw;
     _en = en;
-}
+  }
 
   RouteName.fromJson(dynamic json) {
     _zhTw = json["Zh_tw"];
@@ -147,7 +147,7 @@ class RouteName {
 }
 
 /// Zh_tw : "經國轉運站"
-/// En : "Jingguo Bus Station"
+/// En : "JingGuo Bus Station"
 
 class StopName {
   String _zhTw;
@@ -157,11 +157,11 @@ class StopName {
   String get en => _en;
 
   StopName({
-      String zhTw, 
-      String en}){
+    String zhTw,
+    String en}){
     _zhTw = zhTw;
     _en = en;
-}
+  }
 
   StopName.fromJson(dynamic json) {
     _zhTw = json["Zh_tw"];
@@ -177,8 +177,8 @@ class StopName {
 
 }
 
-/// PositionLat : 25.030203
-/// PositionLon : 121.300541
+/// PositionLat : 25.03021
+/// PositionLon : 121.30054
 /// GeoHash : "wsqq2k87e"
 
 class StationPosition {
@@ -191,18 +191,24 @@ class StationPosition {
   String get geoHash => _geoHash;
 
   StationPosition({
-      double positionLat, 
-      double positionLon, 
-      String geoHash}){
+    double positionLat,
+    double positionLon,
+    String geoHash}){
     _positionLat = positionLat;
     _positionLon = positionLon;
     _geoHash = geoHash;
-}
+  }
 
   StationPosition.fromJson(dynamic json) {
-    _positionLat = json["PositionLat"];
-    _positionLon = json["PositionLon"];
+    _positionLat = round4decimal(json["PositionLat"]);
+    _positionLon = round4decimal(json["PositionLon"]);
     _geoHash = json["GeoHash"];
+  }
+
+  double round4decimal(double num){
+    num = num * 10000;
+    num = num.roundToDouble();
+    return num/10000;
   }
 
   Map<String, dynamic> toJson() {

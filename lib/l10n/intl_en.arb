@@ -1,4 +1,5 @@
 {
+  "app_name": "臺灣公車",
   "notice": "提示",
   "alert": "警告",
   "ok": "確認",
@@ -10,12 +11,15 @@
   "no_departure": "尚未發車",
   "coming_soon": "即將到站",
   "route_change": "路線變更",
-  "your_position": "你的位置",
+  "selected_stop": "選擇站點",
   "get_on": "可上車",
   "get_off": "可下車",
   "get_on_and_off": "可上下車",
   "outbound": "去程",
   "return_trip": "返程",
   "loop": "迴圈",
-  "next_end": "下一站終點站"
+  "next_end": "下一站終點站",
+  "search_stop": "搜尋站點",
+  "route_detail": "路線資訊",
+  "schedule": "時刻表"
 }

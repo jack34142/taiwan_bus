@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "alert" : MessageLookupByLibrary.simpleMessage("警告"),
+    "app_name" : MessageLookupByLibrary.simpleMessage("臺灣公車"),
     "coming_soon" : MessageLookupByLibrary.simpleMessage("即將到站"),
     "get_off" : MessageLookupByLibrary.simpleMessage("可下車"),
     "get_on" : MessageLookupByLibrary.simpleMessage("可上車"),
@@ -40,7 +41,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "positioning" : MessageLookupByLibrary.simpleMessage("定位中..."),
     "return_trip" : MessageLookupByLibrary.simpleMessage("返程"),
     "route_change" : MessageLookupByLibrary.simpleMessage("路線變更"),
-    "server_error" : MessageLookupByLibrary.simpleMessage("伺服器連接失敗"),
-    "your_position" : MessageLookupByLibrary.simpleMessage("你的位置")
+    "route_detail" : MessageLookupByLibrary.simpleMessage("路線資訊"),
+    "schedule" : MessageLookupByLibrary.simpleMessage("時刻表"),
+    "search_stop" : MessageLookupByLibrary.simpleMessage("搜尋站點"),
+    "selected_stop" : MessageLookupByLibrary.simpleMessage("選擇站點"),
+    "server_error" : MessageLookupByLibrary.simpleMessage("伺服器連接失敗")
   };
 }

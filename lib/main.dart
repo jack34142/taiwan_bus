@@ -14,11 +14,34 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      onGenerateTitle: (context) => S.of(context).app_name,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         primaryColor: MyColor.PRIMARY,
         hintColor: MyColor.HINT_TEXT,
+        // backgroundColor: MyColor.CONTAINER_BACKGROUND_COLOR,
+        // dialogBackgroundColor: MyColor.CONTAINER_BACKGROUND_COLOR,
+        // scaffoldBackgroundColor: MyColor.SCAFFOLD_BACKGROUND_COLOR,
+        iconTheme: IconThemeData(
+          color: MyColor.TEXT
+        ),
+        shadowColor: MyColor.SHADOW,
+        dividerColor: MyColor.DIVIDER,
+        textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                overlayColor: MaterialStateProperty.all(Color(0x11010101)),
+                foregroundColor: MaterialStateProperty.all(MyColor.TEXT),
+                minimumSize: MaterialStateProperty.all(Size(65, 40)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 15)),
+                // backgroundColor: MaterialStateProperty.all(MyColor.PRIMARY_COLOR),
+                // shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                //   borderRadius: BorderRadius.all(Radius.circular(50))
+                // )),
+                textStyle: MaterialStateProperty.all(TextStyle(
+                    fontSize: 16
+                ))
+            )
+        ),
         buttonTheme: ButtonThemeData(
           textTheme: ButtonTextTheme.accent,
           colorScheme: Theme.of(context).colorScheme.copyWith(

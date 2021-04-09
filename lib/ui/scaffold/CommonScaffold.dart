@@ -10,7 +10,7 @@ class CommonScaffold extends StatelessWidget {
   final Color foregroundColor;
   final List<Widget> actions;
 
-  CommonScaffold({@required this.body, this.title : "", this.actions,
+  CommonScaffold({@required this.body, this.title, this.actions,
     this.appBarColor : MyColor.PRIMARY, this.backgroundColor,
     this.foregroundColor : MyColor.DARK_THEME_TEXT});
 

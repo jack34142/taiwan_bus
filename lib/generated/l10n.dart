@@ -35,6 +35,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `臺灣公車`
+  String get app_name {
+    return Intl.message(
+      '臺灣公車',
+      name: 'app_name',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `提示`
   String get notice {
     return Intl.message(
@@ -145,11 +155,11 @@ class S {
     );
   }
 
-  /// `你的位置`
-  String get your_position {
+  /// `選擇站點`
+  String get selected_stop {
     return Intl.message(
-      '你的位置',
-      name: 'your_position',
+      '選擇站點',
+      name: 'selected_stop',
       desc: '',
       args: [],
     );
@@ -220,6 +230,36 @@ class S {
     return Intl.message(
       '下一站終點站',
       name: 'next_end',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜尋站點`
+  String get search_stop {
+    return Intl.message(
+      '搜尋站點',
+      name: 'search_stop',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `路線資訊`
+  String get route_detail {
+    return Intl.message(
+      '路線資訊',
+      name: 'route_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `時刻表`
+  String get schedule {
+    return Intl.message(
+      '時刻表',
+      name: 'schedule',
       desc: '',
       args: [],
     );

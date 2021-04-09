@@ -7,6 +7,8 @@ class MyConfig {
   static const String BASE_URL = "https://ptx.transportdata.tw/";
   static const String BASE_API = BASE_URL + "MOTC/v2/Bus/";
 
+  static const double DEFAULT_ZOOM = 14.7;
+
   static bool get isDebug {
     if (const bool.fromEnvironment('dart.vm.product')) {
       return false;

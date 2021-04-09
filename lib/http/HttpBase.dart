@@ -92,6 +92,40 @@ p.s. rangeRadius 不能超過 1000
   }
 
 /**
+搜索含有name的站牌,
+name可以用空白做分隔符
+*/
+  void getStopsByName(String name,
+      {void Function(Response response) onResponse, Function(Exception e) onError, Function() onComplete}){
+    // name = name.replaceAll("台", "臺");
+
+    List<String> names = [];
+    name.split(" ").forEach((name) {
+      StringBuffer buffer = StringBuffer();
+      buffer.write("contains(s/StopName/Zh_tw, '$name')");
+
+      if(name.contains("台")){
+        name = name.replaceAll("台", "臺");
+        buffer.write(" or contains(s/StopName/Zh_tw, '$name')");
+      }
+      if (name.contains("臺")){
+        name = name.replaceAll("臺", "台");
+        buffer.write(" or contains(s/StopName/Zh_tw, '$name')");
+      }
+      names.add("($buffer)");
+    });
+
+    Map<String, dynamic> params = new Map();
+    params["\$select"] = "StationPosition, Stops";
+    params["\$filter"] = "Stops/Any(s: ${names.join(" and ")} )";
+    params["\$format="] = "JSON";
+
+    return mRequest(Method.GET, "Station/InterCity", params: params,
+        headers: MyConfig.ptxHeader,
+        onResponse: onResponse, onError: onError, onComplete: onComplete);
+  }
+
+/**
 查詢通過指定 stopUid 的公車預估時間
 */
   void getBusEstimate(Set<String> stopUids,

@@ -13,4 +13,9 @@ class InitModel extends BaseModel implements IInitModel{
     );
   }
 
+  @override
+  void getStopsByName(String name, {void Function(Response response) onResponse}) {
+    http.getStopsByName(name, onResponse: onResponse);
+  }
+
 }

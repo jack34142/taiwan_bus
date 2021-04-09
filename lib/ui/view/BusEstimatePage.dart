@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taiwan_bus/base/BaseView.dart';
 import 'package:taiwan_bus/beans/BusEstimateBean.dart';
-import 'package:taiwan_bus/beans/BusStationBean.dart';
+import 'package:taiwan_bus/beans/BusStationBean.dart' as BusStationBean;
 import 'package:taiwan_bus/beans/BusStopBean.dart';
 import 'package:taiwan_bus/config/MyColor.dart';
 import 'package:taiwan_bus/mvp/contract/BusEstimateContract.dart';
@@ -13,9 +13,9 @@ import 'package:taiwan_bus/ui/view/BusPositionPage.dart';
 
 class BusEstimatePage extends BaseView{
 
-  final BusStationBean station;
+  final List<BusStationBean.Stops> stops;
 
-  BusEstimatePage(this.station);
+  BusEstimatePage(this.stops);
 
   @override
   State<StatefulWidget> createState() => _BusEstimatePageState();
@@ -27,6 +27,7 @@ class _BusEstimatePageState extends BaseViewState<IBusEstimatePresenter, BusEsti
   List<Tab> _tabs;
   TabController _tabController;
   Set<String> _stopUids = Set();
+  String _stopName;
   int _countTime = 0;
   List<BusEstimateBean> _estimateBean = [];
   List<Map<String, BusStopBean>> _stops = [{},{},{}];
@@ -37,9 +38,12 @@ class _BusEstimatePageState extends BaseViewState<IBusEstimatePresenter, BusEsti
   @override
   void initState() {
     super.initState();
-    widget.station.stops.forEach((stop){
+    Set<String> names = Set();
+    widget.stops.forEach((stop){
       _stopUids.add(stop.stopUID);
+      names.add(stop.stopName.zhTw);
     });
+    _stopName = names.join("/");
   }
 
   @override
@@ -77,21 +81,22 @@ class _BusEstimatePageState extends BaseViewState<IBusEstimatePresenter, BusEsti
   Widget build(BuildContext context) {
     final datas = _estimateBean.where((estimateBean) => estimateBean.direction == _tabController.index).toList();
     return CommonScaffold(
-        body: _tabs != null ? Column(
-          children: [
-            _buildTabBar(),
-            Expanded(child: ListView.separated(
-              itemCount: datas.length,
-              itemBuilder: (context, index){
-                BusEstimateBean busBusEstimate = datas[index];
-                return _buildListItem(busBusEstimate);
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Divider(height: 0);
-              },
-            ))
-          ],
-        ) : Container()
+      title: _stopName,
+      body: _tabs != null ? Column(
+        children: [
+          _buildTabBar(),
+          Expanded(child: ListView.separated(
+            itemCount: datas.length,
+            itemBuilder: (context, index){
+              BusEstimateBean busBusEstimate = datas[index];
+              return _buildListItem(busBusEstimate);
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Divider(height: 0);
+            },
+          ))
+        ],
+      ) : Container()
     );
   }
 

@@ -136,7 +136,7 @@ class _BusPositionPageState extends BaseViewState<IBusPositionPresenter, BusPosi
         border: Border.all(color: MyColor.PRIMARY),
         borderRadius: BorderRadius.all(Radius.circular(4))
       ),
-      child: Text(s.your_position,
+      child: Text(s.selected_stop,
         style: TextStyle(
           color: MyColor.PRIMARY,
           fontSize: 13

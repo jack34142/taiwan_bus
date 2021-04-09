@@ -4,15 +4,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:taiwan_bus/base/BasePresenter.dart';
 import 'package:taiwan_bus/base/IModel.dart';
 import 'package:taiwan_bus/beans/BusStationBean.dart';
+import 'package:taiwan_bus/beans/MyStopBean.dart';
 import 'package:taiwan_bus/mvp/contract/InitContract.dart';
 import 'package:taiwan_bus/mvp/model/InitModel.dart';
 import 'package:taiwan_bus/utils/Log.dart';
-import 'package:taiwan_bus/utils/MyUtil.dart';
 
 class InitPresenter extends BasePresenter<IInitView, IInitModel> implements IInitPresenter {
   static const String _TAG = "InitPresenter";
-
-  Position _myPosition;
+  
   StreamSubscription<Position> positionStream;
 
   @override
@@ -63,49 +62,48 @@ class InitPresenter extends BasePresenter<IInitView, IInitModel> implements IIni
   void setPositionListener(){
     print("setPositionListener");
     if(positionStream == null){
-      final MyUtil positionUtil = MyUtil();
       positionStream = Geolocator.getPositionStream().listen((position) {
-        if(_myPosition == null){
-          _myPosition = position;
-          getNearStops();
-        }else{
-          var dis = positionUtil.calculateDistance(_myPosition.latitude, _myPosition.longitude, position.latitude, position.longitude);
-          if(dis * 1000 > 15){
-            Log.d("$_TAG => my position: $position, move path: $dis km");
-            _myPosition = position;
-            getNearStops();
-          }
-        }
+        view.updateMyPosition(LatLng(position.latitude, position.longitude));
       });
     }
   }
 
   @override
-  Future<CameraPosition> initPosition() async {
-    Completer<CameraPosition> completer = Completer();
-    if(_myPosition == null){
-      await _initPermission();
-      await _isGpsOpen();
-      print("getLastKnownPosition");
-      _myPosition = await Geolocator.getLastKnownPosition();
-      Log.d("$_TAG => last known position: $_myPosition");
-      if(_myPosition != null)
-        getNearStops();
-
-      setPositionListener();
-    }
-    completer.complete(CameraPosition(
-      target: LatLng(_myPosition.latitude, _myPosition.longitude),
-      zoom: 14.4746,
-    ));
-    return completer.future;
+  Future<void> initPosition() async {
+    await _initPermission();
+    await _isGpsOpen();
+    print("getLastKnownPosition");
+    Position position = await Geolocator.getLastKnownPosition();
+    Log.d("$_TAG => last known position: $position");
+    if (position != null)
+      view.updateMyPosition(LatLng(position.latitude, position.longitude));
   }
 
   @override
-  void getNearStops() {
-    model.getNearStops(_myPosition.latitude, _myPosition.longitude, onResponse: (response){
-      List<BusStationBean> datas = (response.data as List).map((data) => BusStationBean.fromJson(data)).toList().cast<BusStationBean>();
-      view.getNearStopsCallback(datas);
+  void getNearStops(LatLng latlng) {
+    model.getNearStops(latlng.latitude, latlng.longitude, onResponse: getStopResponse);
+  }
+
+  @override
+  void getStopsByName(String name) {
+    model.getStopsByName(name, onResponse: getStopResponse);
+  }
+
+  void getStopResponse(response){
+    Map<LatLng, List<Stops>> stopMap = {};
+    (response.data as List).forEach((json) {
+      BusStationBean station = BusStationBean.fromJson(json);
+      LatLng latLng = LatLng(station.stationPosition.positionLat, station.stationPosition.positionLon);
+      if(stopMap.containsKey(latLng))
+        stopMap[latLng].addAll(station.stops);
+      else
+        stopMap[latLng] = station.stops;
     });
+
+    List<MyStopBean> stopList = [];
+    stopMap.forEach((position, stops) {
+      stopList.add(MyStopBean(stops, position: position));
+    });
+    view.getNearStopsCallback(stopList);
   }
 }
